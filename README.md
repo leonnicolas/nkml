@@ -10,7 +10,7 @@ kubectl apply -f https://raw.githubusercontent.com/leonnicolas/nkml/main/example
 ```
 
 ### Configure the Labeler
-```bash
+```
 Usage of ./nkml:
       --hostname string         Hostname of the node on which this process is running
       --kubeconfig string       path to kubeconfig
