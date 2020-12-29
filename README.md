@@ -18,6 +18,7 @@ Usage of ./nkml:
       --label-prefix string     prefix for labels (default "nkml.squat.ai")
       --listen-address string   listen address for prometheus metrics server (default ":8080")
       --log-level string        Log level to use. Possible values: all, debug, info, warn, error, none (default "info")
+      --no-clean-up             Will not attempt to clean labels before shutting down
       --update-time duration    renewal time for labels in seconds (default 10s)
 ```
 
