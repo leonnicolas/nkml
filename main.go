@@ -67,14 +67,7 @@ var (
 	)
 )
 
-func stringToMap(str string) map[string]struct{} {
-	ret := make(map[string]struct{})
-	for _, s := range strings.Split(str, ";") {
-		ret[s] = struct{}{}
-	}
-	return ret
-}
-
+// scanMod scans modules in /proc/modules and returns lables with prefix
 func scanMod() (labels, error) {
 	file, err := os.Open("/proc/modules")
 	if err != nil {
@@ -100,6 +93,7 @@ func scanMod() (labels, error) {
 	return ret, nil
 }
 
+// filter filters keys in map of strings by their prefix and returns the filtered labels
 func filter(m map[string]string) labels {
 	ret := make(labels)
 	for k, v := range m {
@@ -110,6 +104,9 @@ func filter(m map[string]string) labels {
 	return ret
 }
 
+// merge merges labels into a map of strings
+// and returnes a map, after deleting the keys
+// that start with the prefix labelPrefix
 func merge(l map[string]string, ul labels) map[string]string {
 	// delete old labels
 	for k := range filter(l) {
@@ -124,6 +121,7 @@ func merge(l map[string]string, ul labels) map[string]string {
 	return l
 }
 
+// getNode returns the node with name hostname or an error
 func getNode(ctx context.Context, clientset *kubernetes.Clientset) (*v1.Node, error) {
 	node, err := clientset.CoreV1().Nodes().Get(ctx, *hostname, metav1.GetOptions{})
 	if errors.IsNotFound(err) {
@@ -134,6 +132,7 @@ func getNode(ctx context.Context, clientset *kubernetes.Clientset) (*v1.Node, er
 	return node, nil
 }
 
+// scanAndLabel scans and labels the node with name hostname or returns an error
 func scanAndLabel(ctx context.Context, clientset *kubernetes.Clientset, logger log.Logger) error {
 	node, err := getNode(ctx, clientset)
 	if err != nil {
@@ -165,6 +164,7 @@ func scanAndLabel(ctx context.Context, clientset *kubernetes.Clientset, logger l
 	return nil
 }
 
+// cleanUp will remove all labels with prefix labelPrefix from the node with name hostname or return an error
 func cleanUp(clientset *kubernetes.Clientset, logger log.Logger) error {
 	ctx := context.Background()
 	node, err := getNode(ctx, clientset)
