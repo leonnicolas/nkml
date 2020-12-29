@@ -45,6 +45,7 @@ var (
 	lMod               = flag.StringSliceP("label-mod", "m", []string{}, "list of strings, kernel modules matching a string will be used as labels with values true, if found")
 	logLevel           = flag.String("log-level", logLevelInfo, fmt.Sprintf("Log level to use. Possible values: %s", availableLogLevels))
 	updateTime         = flag.Duration("update-time", 10*time.Second, "renewal time for labels in seconds")
+	noCleanUp          = flag.Bool("no-clean-up", false, "Will not attempt to clean labels before shutting down")
 	labelPrefix        = flag.String("label-prefix", "nkml.squat.ai", "prefix for labels")
 	addr               = flag.String("listen-address", ":8080", "listen address for prometheus metrics server")
 	availableLogLevels = strings.Join([]string{
@@ -281,10 +282,12 @@ func Main() error {
 			level.Info(logger).Log("msg", fmt.Sprintf("received signal %v", s))
 			// cancel context for running scan and label routine
 			cancel()
-			// lock mutex to wait until running scan and label routin is finished
+			// lock mutex to wait until running scan and label routine is finished
 			mutex.Lock()
-			if err := cleanUp(clientset, logger); err != nil {
-				level.Error(logger).Log("msg", "could not clean node", "err", err)
+			if *noCleanUp == false {
+				if err := cleanUp(clientset, logger); err != nil {
+					level.Error(logger).Log("msg", "could not clean node", "err", err)
+				}
 			}
 			if err := msrv.Close(); err != nil {
 				level.Error(logger).Log("msg", "could not close metrics server", "err", err)
