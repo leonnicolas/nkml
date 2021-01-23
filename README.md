@@ -2,12 +2,15 @@
 
 Node Kernel Module Labeler - label Kubernetes nodes according to their kernel modules.
 
+[![ci](https://github.com/leonnicolas/nkml/workflows/ci/badge.svg?branch=main)](https://github.com/leonnicolas/nkml/actions?query=workflow%3Aci)
+
 ## Usage
 
 Apply the example configuration
 ```bash
 kubectl apply -f https://raw.githubusercontent.com/leonnicolas/nkml/main/example.yaml
 ```
+to label nodes with regard to the [WireGuard](https://www.wireguard.com/) kernel module.
 
 ### Configure the Labeler
 ```
@@ -22,10 +25,12 @@ Usage of ./nkml:
       --update-time duration    renewal time for labels in seconds (default 10s)
 ```
 
-__Note:__ to check kernel modules, __nudl__ needs access to the file _/proc/modules_.
+__Note:__ to check kernel modules, __nkml__ needs access to the file _/proc/modules_.
 
 ### Label Kernel Modules
-You can label your nodes according to their kernel modules. Use the `--label-mod` flag to pass a list of strings. If a kernel module found in __/proc/modules__ matches one of the input strings, then the node will be given a label of the format:
+You can label your nodes according to their kernel modules.
+Use the `--label-mod` flag to pass a list of strings.
+If a kernel module found in __/proc/modules__ matches one of the input strings, then the node will be given a label of the format:
 ```	
 <label prefix>/<module name>=true	
 ```	
