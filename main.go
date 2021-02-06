@@ -68,7 +68,7 @@ var (
 	)
 )
 
-// scanMod scans modules in /proc/modules and returns lables with prefix
+// scanMod scans modules in /proc/modules and returns lables with prefix.
 func scanMod() (labels, error) {
 	file, err := os.Open("/proc/modules")
 	if err != nil {
@@ -94,7 +94,7 @@ func scanMod() (labels, error) {
 	return ret, nil
 }
 
-// filter filters keys in map of strings by their prefix and returns the filtered labels
+// filter filters keys in map of strings by their prefix and returns the filtered labels.
 func filter(m map[string]string) labels {
 	ret := make(labels)
 	for k, v := range m {
@@ -106,23 +106,23 @@ func filter(m map[string]string) labels {
 }
 
 // merge merges labels into a map of strings
-// and returnes a map, after deleting the keys
-// that start with the prefix labelPrefix
+// and returns a map, after deleting the keys
+// that start with the prefix labelPrefix.
 func merge(l map[string]string, ul labels) map[string]string {
-	// delete old labels
+	// Delete old labels.
 	for k := range filter(l) {
 		if _, e := ul[k]; !e {
 			delete(l, k)
 		}
 	}
-	// add new labels to map
+	// Add new labels to map.
 	for k, v := range ul {
 		l[k] = v
 	}
 	return l
 }
 
-// getNode returns the node with name hostname or an error
+// getNode returns the node with name hostname or an error.
 func getNode(ctx context.Context, clientset *kubernetes.Clientset) (*v1.Node, error) {
 	node, err := clientset.CoreV1().Nodes().Get(ctx, *hostname, metav1.GetOptions{})
 	if errors.IsNotFound(err) {
@@ -133,7 +133,7 @@ func getNode(ctx context.Context, clientset *kubernetes.Clientset) (*v1.Node, er
 	return node, nil
 }
 
-// scanAndLabel scans and labels the node with name hostname or returns an error
+// scanAndLabel scans and labels the node with name hostname or returns an error.
 func scanAndLabel(ctx context.Context, clientset *kubernetes.Clientset, logger log.Logger) error {
 	node, err := getNode(ctx, clientset)
 	if err != nil {
@@ -143,7 +143,7 @@ func scanAndLabel(ctx context.Context, clientset *kubernetes.Clientset, logger l
 	if err != nil {
 		return err
 	}
-	// scan modules
+	// Scan modules.
 	l, err := scanMod()
 	if err != nil {
 		return fmt.Errorf("could not scan modules: %w", err)
@@ -165,7 +165,7 @@ func scanAndLabel(ctx context.Context, clientset *kubernetes.Clientset, logger l
 	return nil
 }
 
-// cleanUp will remove all labels with prefix labelPrefix from the node with name hostname or return an error
+// cleanUp will remove all labels with the prefix labelPrefix from the node with name hostname or return an error.
 func cleanUp(clientset *kubernetes.Clientset, logger log.Logger) error {
 	ctx := context.Background()
 	node, err := getNode(ctx, clientset)
@@ -222,10 +222,10 @@ func Main() error {
 	logger = log.With(logger, "ts", log.DefaultTimestampUTC)
 	logger = log.With(logger, "caller", log.DefaultCaller)
 
-	// create context to be able to cancel calls to the kubernetes API in clean up
+	// Create a context to be able to cancel calls to the Kubernetes API in the clean up.
 	ctx, cancel := context.WithCancel(context.Background())
 
-	// create prometheus registry to not use default one
+	// Create prometheus registry instead of using default one.
 	r := prometheus.NewRegistry()
 	r.MustRegister(
 		reconcilingCounter,
@@ -234,7 +234,7 @@ func Main() error {
 	)
 	m := http.NewServeMux()
 	m.Handle("/metrics", promhttp.HandlerFor(r, promhttp.HandlerOpts{}))
-	// create global var for server to be able to stop the server later
+	// Create a global variable for the metrics server to be able to stop it later.
 	msrv := &http.Server{
 		Addr:    *addr,
 		Handler: m,
@@ -246,7 +246,7 @@ func Main() error {
 		}
 	}()
 
-	// generate kubeconfig
+	// Generate a kubeconfig.
 	var config *rest.Config
 	var err error
 	if *kubeconfig == "" {
@@ -264,7 +264,7 @@ func Main() error {
 		}
 		level.Info(logger).Log("msg", fmt.Sprintf("generated config with kubeconfig: %s", *kubeconfig))
 	}
-	// create the clientset
+	// Create the clientset.
 	clientset, err := kubernetes.NewForConfig(config)
 	if err != nil {
 		return fmt.Errorf("could not generate clientset: %w", err)
@@ -274,15 +274,15 @@ func Main() error {
 	signal.Notify(ch, os.Interrupt, syscall.SIGTERM, syscall.SIGQUIT)
 
 	level.Info(logger).Log("msg", "start service", "label-prefix", *labelPrefix, "label-mod", *lMod)
-	// use a mutex to avoid simultaneous updates at small update-time or slow network speed
+	// Use a mutex to avoid simultaneous updates at small update-time or slow network speed.
 	var mutex sync.Mutex
 	for {
 		select {
 		case s := <-ch:
 			level.Info(logger).Log("msg", fmt.Sprintf("received signal %v", s))
-			// cancel context for running scan and label routine
+			// Cancel context for running scan and label routine.
 			cancel()
-			// lock mutex to wait until running scan and label routine is finished
+			// Lock mutex to wait until running scan and label routine is finished.
 			mutex.Lock()
 			if *noCleanUp == false {
 				if err := cleanUp(clientset, logger); err != nil {
@@ -298,7 +298,7 @@ func Main() error {
 			os.Exit(130)
 		case <-time.After(*updateTime):
 			mutex.Lock()
-			// use a go routine, so the time to update the labels doesn't influence the frequency of updates
+			// Use a go routine, so the time to update the labels doesn't influence the frequency of updates.
 			go func() {
 				defer mutex.Unlock()
 				if err := scanAndLabel(ctx, clientset, logger); err != nil {

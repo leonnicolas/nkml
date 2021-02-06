@@ -1,4 +1,4 @@
-module leonnicolas/nkml
+module github.com/leonnicolas/nkml
 
 go 1.15
 
