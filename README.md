@@ -3,6 +3,7 @@
 Node Kernel Module Labeler - label Kubernetes nodes according to their kernel modules.
 
 [![ci](https://github.com/leonnicolas/nkml/workflows/ci/badge.svg?branch=main)](https://github.com/leonnicolas/nkml/actions?query=workflow%3Aci)
+[![Docker Pulls](https://img.shields.io/docker/pulls/leonnicolas/nkml?color=blue)](https://hub.docker.com/repository/docker/leonnicolas/nkml)
 
 ## Usage
 
