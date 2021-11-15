@@ -16,6 +16,7 @@ import (
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
 	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/collectors"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	flag "github.com/spf13/pflag"
 	v1 "k8s.io/api/core/v1"
@@ -224,13 +225,14 @@ func Main() error {
 
 	// Create a context to be able to cancel calls to the Kubernetes API in the clean up.
 	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
 
 	// Create prometheus registry instead of using default one.
 	r := prometheus.NewRegistry()
 	r.MustRegister(
 		reconcilingCounter,
-		prometheus.NewGoCollector(),
-		prometheus.NewProcessCollector(prometheus.ProcessCollectorOpts{}),
+		collectors.NewGoCollector(),
+		collectors.NewProcessCollector(collectors.ProcessCollectorOpts{}),
 	)
 	m := http.NewServeMux()
 	m.Handle("/metrics", promhttp.HandlerFor(r, promhttp.HandlerOpts{}))
