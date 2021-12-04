@@ -2,8 +2,8 @@
 
 Node Kernel Module Labeler - label Kubernetes nodes according to their kernel modules.
 
-[![ci](https://github.com/leonnicolas/nkml/workflows/ci/badge.svg?branch=main)](https://github.com/leonnicolas/nkml/actions?query=workflow%3Aci)
-[![Docker Pulls](https://img.shields.io/docker/pulls/leonnicolas/nkml?color=blue)](https://hub.docker.com/repository/docker/leonnicolas/nkml)
+[![ci](https://github.com/leonnicolas/nkml/actions/workflows/push.yaml/badge.svg)](https://github.com/leonnicolas/nkml/actions/workflows/push.yaml)
+[![Docker Pulls](https://img.shields.io/docker/pulls/leonnicolas/nkml?color=blue)](https://hub.docker.com/r/leonnicolas/nkml)
 
 ## Usage
 
@@ -46,3 +46,7 @@ If the module is not found, the flag's value will be set to _false_.
 ```bash
 docker run --rm -v ~/.kube:/mnt leonnicolas/nkml --kubeconfig /mnt/k3s.yaml --label-mod="wireguard,fantasy" --hostname example_host
 ```
+
+## Images
+
+Images can be found on [Docker Hub](https://hub.docker.com/r/leonnicolas/nkml) `leonnicolas/nkml` and [GitHub Container Registry](https://ghcr.io) `ghcr.io/leonnicolas/nkml`.
