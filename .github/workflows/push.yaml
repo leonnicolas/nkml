@@ -28,13 +28,24 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PW }}
       -
+        name: Login to GitHub Container Registry
+        uses: docker/login-action@v1 
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      -
         name: Build and push
         id: docker_build
         uses: docker/build-push-action@v2
         with:
           push: true
           platforms: linux/arm64, linux/arm, linux/amd64
-          tags: leonnicolas/nkml:latest, leonnicolas/nkml:${{ steps.sha.outputs.sha }}
+          tags: |
+            leonnicolas/nkml:latest
+            leonnicolas/nkml:${{ steps.sha.outputs.sha }}
+            ghcr.io/leonnicolas/nkml:latest
+            ghcr.io/leonnicolas/nkml:${{ steps.sha.outputs.sha }}
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
