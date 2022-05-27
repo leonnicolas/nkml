@@ -13,8 +13,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/go-kit/kit/log"
-	"github.com/go-kit/kit/log/level"
+	"github.com/go-kit/log"
+	"github.com/go-kit/log/level"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/collectors"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -59,14 +59,12 @@ var (
 	}, ", ")
 )
 
-var (
-	reconcilingCounter = prometheus.NewCounterVec(
-		prometheus.CounterOpts{
-			Name: "reconciling_counter",
-			Help: "Number of reconciling outcomes",
-		},
-		[]string{"success"},
-	)
+var reconcilingCounter = prometheus.NewCounterVec(
+	prometheus.CounterOpts{
+		Name: "reconciling_counter",
+		Help: "Number of reconciling outcomes",
+	},
+	[]string{"success"},
 )
 
 // scanMod scans modules in /proc/modules and returns lables with prefix.
