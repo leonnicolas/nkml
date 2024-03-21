@@ -1,7 +1,11 @@
-FROM golang:1.18.4-bullseye as build
-COPY . /nkml
+FROM golang:1.21-bullseye as build
+
 WORKDIR /nkml
-RUN CGO_ENABLED=0 go build --mod=vendor -o nkml
+COPY go.mod go.sum .
+RUN go mod download
+
+COPY . .
+RUN CGO_ENABLED=0 go build -o nkml
 
 FROM scratch
 COPY --from=build /nkml/nkml .

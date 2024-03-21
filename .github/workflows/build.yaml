@@ -15,5 +15,5 @@ jobs:
       - name: Build ${{ matrix.arch }}
         uses: actions/setup-go@v2
         with:
-         go-version: '1.18'
+         go-version: '1.21'
       - run: GO_ARCH=${{ matrix.arch }} go build
