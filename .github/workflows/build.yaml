@@ -11,9 +11,9 @@ jobs:
         arch: [ 'amd64', 'arm', 'arm64' ]
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Build ${{ matrix.arch }}
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v5
         with:
          go-version: '1.21'
       - run: GO_ARCH=${{ matrix.arch }} go build
