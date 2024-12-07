@@ -1,19 +1,17 @@
-name: build
+name: test
 
 on:
   pull_request:
 
 jobs:
-  main:
+  e2e:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        arch: [ 'amd64', 'arm', 'arm64' ]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Build ${{ matrix.arch }}
+      - run: docker build -t "nkml:e2e" .
+      - name: Set up Go
         uses: actions/setup-go@v5
         with:
          go-version: '1.23'
-      - run: GO_ARCH=${{ matrix.arch }} go build
+      - run: go test .
