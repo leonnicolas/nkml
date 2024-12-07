@@ -1,0 +1,17 @@
+name: test
+
+on:
+  pull_request:
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - run: docker build -t "nkml:e2e" .
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+         go-version: '1.23'
+      - run: go test .
