@@ -47,7 +47,7 @@ var (
 	logLevel           = flag.String("log-level", logLevelInfo, fmt.Sprintf("Log level to use. Possible values: %s", availableLogLevels))
 	updateTime         = flag.Duration("update-time", 10*time.Second, "renewal time for labels in seconds")
 	noCleanUp          = flag.Bool("no-clean-up", false, "Will not attempt to clean labels before shutting down")
-	labelPrefix        = flag.String("label-prefix", "nkml.squat.ai", "prefix for labels")
+	labelPrefix        = flag.String("label-prefix", "nkml.devic.es", "prefix for labels")
 	addr               = flag.String("listen-address", ":8080", "listen address for prometheus metrics server")
 	availableLogLevels = strings.Join([]string{
 		logLevelAll,

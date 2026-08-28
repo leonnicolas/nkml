@@ -77,7 +77,7 @@ func TestMain(t *testing.T) {
 				require.NoError(t, json.NewDecoder(w).Decode(&labels), w.String())
 
 				for key, value := range labels {
-					if strings.HasPrefix(key, "nkml.squat.ai") {
+					if strings.HasPrefix(key, "nkml.devic.es") {
 						found = true
 						t.Logf("found label %s=%s\n", key, value)
 						break
