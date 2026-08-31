@@ -48,7 +48,7 @@ spec:
       serviceAccountName: nkml
       containers:
       - name: nkml
-        image: leonnicolas/nkml
+        image: nkml:e2e
         args: 
         - --hostname=$(NODE_NAME)
         - --label-mod=wireguard
