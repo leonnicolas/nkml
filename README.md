@@ -19,7 +19,7 @@ Usage of ./nkml:
       --hostname string         Hostname of the node on which this process is running
       --kubeconfig string       path to kubeconfig
   -m, --label-mod strings       list of strings, kernel modules matching a string will be used as labels with values true, if found
-      --label-prefix string     prefix for labels (default "nkml.squat.ai")
+      --label-prefix string     prefix for labels (default "nkml.devic.es")
       --listen-address string   listen address for prometheus metrics server (default ":8080")
       --log-level string        Log level to use. Possible values: all, debug, info, warn, error, none (default "info")
       --no-clean-up             Will not attempt to clean labels before shutting down
@@ -37,7 +37,7 @@ If a kernel module found in __/proc/modules__ matches one of the input strings, 
 ```	
 for example:	
 ```	
-nkml.squat.ai/wireguard=true	
+nkml.devic.es/wireguard=true	
 ```	
 If the module is not found, the flag's value will be set to _false_.
  
